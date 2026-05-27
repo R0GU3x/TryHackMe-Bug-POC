@@ -44,8 +44,8 @@ Authentication is performed using exported browser cookies from your own account
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/tryhackme-streak-automator.git
-cd tryhackme-streak-automator
+git clone https://github.com/R0GU3x/TryHackMe-Bug-POC.git
+cd TryHackMe-Bug-POC
 ```
 
 ### 2. Install dependencies
