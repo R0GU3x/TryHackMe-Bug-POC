@@ -114,15 +114,15 @@ def main(token:str):
             
             if response.status_code == 200:
                 # print("✓ Success! Got 200 OK response")
+                print(f"{colors.BRIGHT_GREEN}{colors.BOLD}[✓]{colors.RESET} Room Solved: 200 OK")
                 try:
                     response_json = response.json()
                     # print(f"Response: {json.dumps(response_json, indent=2)}")
                     streak = response_json["data"]["currentStreak"]
                     # print(f"{colors.BRIGHT_GREEN}Room Solved: {colors.BOLD}200 OK{colors.RESET}")
-                    print(f"{colors.BRIGHT_GREEN}{colors.BOLD}[✓]{colors.RESET} Room Solved: 200 OK")
                     print(f"{colors.BRIGHT_CYAN}{colors.BOLD}[i]{colors.RESET} Current Streak: {colors.BRIGHT_YELLOW}{streak}{colors.RESET}")
                 except:
-                    print(f"Response Text: {colors.BG_BRIGHT_RED}{response.text}{colors.RESET}")
+                    print(f"Unexpected Response: {colors.BG_BRIGHT_RED}{response.text}{colors.RESET}")
             else:
                 print(f"{colors.BRIGHT_RED}{colors.BOLD}✗{colors.RESET} Expected {colors.BRIGHT_GREEN}200{colors.RESET} but got {colors.BRIGHT_RED}{response.status_code}{colors.RESET}")
                 print(f"Response: {colors.BG_RED}{response.text}{colors.RESET}")
