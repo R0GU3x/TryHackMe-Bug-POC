@@ -2,6 +2,7 @@ import json
 import requests
 from urllib.parse import urlencode
 import core.colors as colors
+import subprocess
 
 def load_cookies_from_file(filename="core/cookies.data"):
     """Load cookies from JSON file and convert to requests cookie format"""
@@ -15,6 +16,18 @@ def load_cookies_from_file(filename="core/cookies.data"):
         cookies[cookie['name']] = cookie['value']
     
     return cookies
+
+def open_cookies_file(filename="core/cookies.data"):
+    with open(filename, 'w') as f:
+        json.dump({
+            "name": "Fetch the new cookies from you browser and paste them here.",
+            "value": "Eating expired cookies leads to constipation"
+        }, f)
+    try:
+        proc = subprocess.Popen(['notepad.exe', filename])
+        proc.wait()
+    except Exception as e:
+        print(f"{colors.BRIGHT_RED}{colors.BOLD}[✗]{colors.RESET} Failed to open {filename}: {e}")
 
 def main(token:str):
     """Send POST request to reset room progress"""
@@ -62,37 +75,42 @@ def main(token:str):
     
     # Request body
     data = {"roomCode": "kothfoodctf"}
+
+    while True:
     
-    try:
-        # Send POST request
-        print(colors.BRIGHT_YELLOW, end='')
-        response = requests.post(
-            url,
-            headers=headers,
-            cookies=cookies,
-            json=data  # This automatically sets content-type to application/json
-            # verify=False  # Equivalent to curl's -k flag (skip SSL verification)
-        )
-        print(colors.RESET)
-        
-        # print(f"Response Status Code: {response.status_code}")
-        
-        if response.status_code == 200:
-            print(f"{colors.BRIGHT_GREEN}{colors.BOLD}[✓]{colors.RESET} Room Reset: 200 OK")
-            # try:
-            #     print(f"Response Body: {response.json()}")
-            # except:
-            #     print(f"Response Body: {response.text}")
-            return True
-        else:
-            print(f"{colors.BRIGHT_RED}{colors.BOLD}[✗]{colors.RESET} Request failed with status code: {response.status_code}")
-            print(f"Response: {colors.RED}{response.text}{colors.RESET}")
-            print(f"\n{colors.BRIGHT_BLUE}[!]{colors.RESET} Try updating the {colors.BRIGHT_CYAN}{colors.BOLD}cookies.data{colors.RESET_BOLD}{colors.RESET} file or {colors.BRIGHT_YELLOW}{colors.BOLD}csrf_token{colors.RESET}")
-            return False
+        try:
+            # Send POST request
+            print(colors.BRIGHT_YELLOW, end='')
+            response = requests.post(
+                url,
+                headers=headers,
+                cookies=cookies,
+                json=data  # This automatically sets content-type to application/json
+                # verify=False  # Equivalent to curl's -k flag (skip SSL verification)
+            )
+            print(colors.RESET)
             
-    except requests.exceptions.RequestException as e:
-        print(f"{colors.BRIGHT_RED}{colors.BOLD}[✗]{colors.RESET} Error making request: {e}")
-        return False
+            # print(f"Response Status Code: {response.status_code}")
+            
+            if response.status_code == 200:
+                print(f"{colors.BRIGHT_GREEN}{colors.BOLD}[✓]{colors.RESET} Room Reset: 200 OK")
+                # try:
+                #     print(f"Response Body: {response.json()}")
+                # except:
+                #     print(f"Response Body: {response.text}")
+                return True
+            else:
+                print(f"{colors.BRIGHT_RED}{colors.BOLD}[✗]{colors.RESET} Request failed with status code: {response.status_code}")
+                print(f"Response: {colors.RED}{response.text}{colors.RESET}")
+                print(f"\n{colors.BRIGHT_BLUE}[!]{colors.RESET} Try updating the {colors.BRIGHT_CYAN}{colors.BOLD}cookies.data{colors.RESET_BOLD}{colors.RESET} file")
+                print(f'\n', "=" * 60, '\n')
+                # return False
+                open_cookies_file() # for manual updation
+                return False
+            
+        except requests.exceptions.RequestException as e:
+            print(f"{colors.BRIGHT_RED}{colors.BOLD}[✗]{colors.RESET} Error making request: {e}")
+            return False
 
 if __name__ == "__main__":
     success = main()

@@ -3,10 +3,13 @@ import core.resetRoom as rr
 import core.fetchCSRF as fc
 import time
 
-csrf_token = fc.get_csrf_token_simple()
+while True:
+    csrf_token = fc.get_csrf_token_simple()
+    if csrf_token and rr.main(csrf_token):
+        time.sleep(1)
+        sr.main(csrf_token)
+        break
+    else:
+        continue
 
-if rr.main(csrf_token):
-    time.sleep(2)
-    sr.main(csrf_token)
-
-input("Press ENTER to exit")
+input("\nPress ENTER to exit")
